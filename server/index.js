@@ -1,0 +1,268 @@
+import express from 'express';
+import cors from 'cors';
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+const allMovies = [
+  {
+    "id": 1,
+    "title": "Vikram",
+    "overview": "A retired black-ops commander returns to uncover a deadly criminal syndicate linked to a series of mysterious murders.",
+    "releaseDate": "2022",
+    "poster": "https://placehold.co/300x450?text=Vikram",
+    "genres": ["Action", "Thriller"],
+    "rating": 8.3
+  },
+  {
+    "id": 2,
+    "title": "Jai Bhim",
+    "overview": "A determined lawyer fights for justice after an innocent tribal man disappears in police custody.",
+    "releaseDate": "2021",
+    "poster": "https://placehold.co/300x450?text=Jai+Bhim",
+    "genres": ["Drama", "Crime"],
+    "rating": 8.8
+  },
+  {
+    "id": 3,
+    "title": "Master",
+    "overview": "An alcoholic professor confronts a ruthless gangster who exploits juvenile inmates for criminal activities.",
+    "releaseDate": "2021",
+    "poster": "https://placehold.co/300x450?text=Master",
+    "genres": ["Action", "Drama"],
+    "rating": 7.5
+  },
+  {
+    "id": 4,
+    "title": "Ponniyin Selvan: Part I",
+    "overview": "A young messenger becomes entangled in royal conspiracies within the mighty Chola Empire.",
+    "releaseDate": "2022",
+    "poster": "https://placehold.co/300x450?text=PS-1",
+    "genres": ["Historical", "Adventure"],
+    "rating": 7.7
+  },
+  {
+    "id": 5,
+    "title": "Ponniyin Selvan: Part II",
+    "overview": "The epic Chola saga continues as power struggles and hidden secrets shape the empire's future.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=PS-2",
+    "genres": ["Historical", "Drama"],
+    "rating": 7.8
+  },
+  {
+    "id": 6,
+    "title": "Kaithi",
+    "overview": "An ex-convict races through one dangerous night to save police officers and reunite with his daughter.",
+    "releaseDate": "2019",
+    "poster": "https://placehold.co/300x450?text=Kaithi",
+    "genres": ["Action", "Thriller"],
+    "rating": 8.5
+  },
+  {
+    "id": 7,
+    "title": "Soorarai Pottru",
+    "overview": "An ambitious man dreams of making affordable air travel accessible to ordinary people.",
+    "releaseDate": "2020",
+    "poster": "https://placehold.co/300x450?text=Soorarai+Pottru",
+    "genres": ["Drama", "Biography"],
+    "rating": 8.7
+  },
+  {
+    "id": 8,
+    "title": "Asuran",
+    "overview": "A farmer battles oppression and violence to protect his family from powerful enemies.",
+    "releaseDate": "2019",
+    "poster": "https://placehold.co/300x450?text=Asuran",
+    "genres": ["Action", "Drama"],
+    "rating": 8.4
+  },
+  {
+    "id": 9,
+    "title": "96",
+    "overview": "Two childhood sweethearts reunite after decades and relive memories of their first love.",
+    "releaseDate": "2018",
+    "poster": "https://placehold.co/300x450?text=96",
+    "genres": ["Romance", "Drama"],
+    "rating": 8.5
+  },
+  {
+    "id": 10,
+    "title": "Thani Oruvan",
+    "overview": "A dedicated police officer matches wits with a brilliant and influential scientist turned criminal mastermind.",
+    "releaseDate": "2015",
+    "poster": "https://placehold.co/300x450?text=Thani+Oruvan",
+    "genres": ["Action", "Thriller"],
+    "rating": 8.4
+  },
+  {
+    "id": 11,
+    "title": "Maanagaram",
+    "overview": "The lives of four strangers unexpectedly intersect over a single event in a bustling city.",
+    "releaseDate": "2017",
+    "poster": "https://placehold.co/300x450?text=Maanagaram",
+    "genres": ["Thriller", "Drama"],
+    "rating": 8.1
+  },
+  {
+    "id": 12,
+    "title": "Ratsasan",
+    "overview": "A determined police officer hunts a serial killer targeting schoolgirls.",
+    "releaseDate": "2018",
+    "poster": "https://placehold.co/300x450?text=Ratsasan",
+    "genres": ["Crime", "Thriller"],
+    "rating": 8.3
+  },
+  {
+    "id": 13,
+    "title": "Doctor",
+    "overview": "A military doctor uses unconventional methods to rescue a kidnapped child from a trafficking ring.",
+    "releaseDate": "2021",
+    "poster": "https://placehold.co/300x450?text=Doctor",
+    "genres": ["Action", "Comedy"],
+    "rating": 7.4
+  },
+  {
+    "id": 14,
+    "title": "Don",
+    "overview": "A carefree engineering student discovers his true passion while navigating family expectations.",
+    "releaseDate": "2022",
+    "poster": "https://placehold.co/300x450?text=Don",
+    "genres": ["Comedy", "Drama"],
+    "rating": 7.2
+  },
+  {
+    "id": 15,
+    "title": "Love Today",
+    "overview": "A young couple's trust is tested when they exchange their mobile phones for a day.",
+    "releaseDate": "2022",
+    "poster": "https://placehold.co/300x450?text=Love+Today",
+    "genres": ["Romance", "Comedy"],
+    "rating": 8.0
+  },
+  {
+    "id": 16,
+    "title": "Maaveeran",
+    "overview": "A timid cartoonist transforms into an unlikely hero after hearing a mysterious voice guiding him.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=Maaveeran",
+    "genres": ["Action", "Fantasy"],
+    "rating": 7.7
+  },
+  {
+    "id": 17,
+    "title": "Mark Antony",
+    "overview": "A time-traveling telephone changes the fate of gangsters across different generations.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=Mark+Antony",
+    "genres": ["Sci-Fi", "Action"],
+    "rating": 7.3
+  },
+  {
+    "id": 18,
+    "title": "Viduthalai Part 1",
+    "overview": "A sincere constable is caught between duty and morality during a hunt for a revolutionary leader.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=Viduthalai+1",
+    "genres": ["Crime", "Drama"],
+    "rating": 8.2
+  },
+  {
+    "id": 19,
+    "title": "Captain Miller",
+    "overview": "A rebel warrior fights colonial oppression while confronting his troubled past.",
+    "releaseDate": "2024",
+    "poster": "https://placehold.co/300x450?text=Captain+Miller",
+    "genres": ["Action", "Period"],
+    "rating": 7.0
+  },
+  {
+    "id": 20,
+    "title": "Lubber Pandhu",
+    "overview": "A village cricket rivalry evolves into an emotional journey about family, pride, and second chances.",
+    "releaseDate": "2024",
+    "poster": "https://placehold.co/300x450?text=Lubber+Pandhu",
+    "genres": ["Sports", "Drama"],
+    "rating": 8.2
+  },
+  {
+    "id": 21,
+    "title": "Parking",
+    "overview": "A simple parking dispute between neighbors spirals into an intense psychological conflict.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=Parking",
+    "genres": ["Drama", "Thriller"],
+    "rating": 8.1
+  },
+  {
+    "id": 22,
+    "title": "Good Night",
+    "overview": "A man's chronic snoring threatens his marriage and forces him to confront his insecurities.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=Good+Night",
+    "genres": ["Comedy", "Drama"],
+    "rating": 8.0
+  },
+  {
+    "id": 23,
+    "title": "Ayothi",
+    "overview": "Unexpected kindness transforms the lives of a grieving family stranded far from home.",
+    "releaseDate": "2023",
+    "poster": "https://placehold.co/300x450?text=Ayothi",
+    "genres": ["Drama", "Family"],
+    "rating": 8.3
+  },
+  {
+    "id": 24,
+    "title": "Garudan",
+    "overview": "A loyal friend is forced to choose between justice and unwavering devotion.",
+    "releaseDate": "2024",
+    "poster": "https://placehold.co/300x450?text=Garudan",
+    "genres": ["Action", "Drama"],
+    "rating": 8.1
+  },
+  {
+    "id": 25,
+    "title": "Amaran",
+    "overview": "Based on the life of a brave Indian Army officer whose courage and sacrifice inspire a nation.",
+    "releaseDate": "2024",
+    "poster": "https://placehold.co/300x450?text=Amaran",
+    "genres": ["Biography", "Action"],
+    "rating": 8.5
+  }
+];
+
+const PAGE_SIZE = 4;
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.get('/api/movies', (req, res) => {
+  const page = Number(req.query.page || 1);
+  const search = (req.query.search || '').trim().toLowerCase();
+
+  const filteredMovies = allMovies.filter((movie) => {
+    const haystack = `${movie.title} ${movie.overview}`.toLowerCase();
+    return haystack.includes(search);
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredMovies.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const start = (safePage - 1) * PAGE_SIZE;
+  const movies = filteredMovies.slice(start, start + PAGE_SIZE);
+
+  res.json({
+    movies,
+    totalPages,
+    page: safePage,
+    totalResults: filteredMovies.length
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Backend running on http://localhost:${PORT}`);
+});
