@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
+import FALLBACK_MOVIES from './data/movies';
 
 const API_URL = '/api/movies';
 
@@ -16,10 +17,26 @@ function App() {
   useEffect(() => {
     const fetchMovies = async () => {
       const url = `${API_URL}?page=${page}&search=${encodeURIComponent(search)}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      setMovies(data.movies || []);
-      setTotalPages(data.totalPages || 1);
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data = await res.json();
+        setMovies(data.movies || []);
+        setTotalPages(data.totalPages || 1);
+      } catch (err) {
+        // Backend not reachable (e.g. running locally). Use fallback static data.
+        const q = (search || '').trim().toLowerCase();
+        const filtered = FALLBACK_MOVIES.filter((m) => {
+          const hay = `${m.title} ${m.overview}`.toLowerCase();
+          return hay.includes(q);
+        });
+        const pageSize = 4;
+        const total = Math.max(1, Math.ceil(filtered.length / pageSize));
+        const safePage = Math.min(page, total);
+        const start = (safePage - 1) * pageSize;
+        setMovies(filtered.slice(start, start + pageSize));
+        setTotalPages(total);
+      }
     };
 
     fetchMovies();
