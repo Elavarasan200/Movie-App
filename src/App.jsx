@@ -19,7 +19,10 @@ function App() {
       const url = `${API_URL}?page=${page}&search=${encodeURIComponent(search)}`;
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error('Network response was not ok');
+        const contentType = res.headers.get('content-type') || '';
+        if (!res.ok || !contentType.includes('application/json')) {
+          throw new Error('Non-JSON or non-OK response');
+        }
         const data = await res.json();
         setMovies(data.movies || []);
         setTotalPages(data.totalPages || 1);
